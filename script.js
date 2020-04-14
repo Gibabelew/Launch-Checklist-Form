@@ -1,17 +1,3 @@
-//  bonus mission
-function randomize(max = 100, min = 0) {
-   return Math.floor(Math.random() * (max - min) + min);
-}
-
-function toTitleCase(str) {
-   if (typeof str.split(" ") !== "string") {
-      return str.toLowerCase().split(' ').map(function (word) {
-         return word.replace(word[0], word[0].toUpperCase());
-      }).join(' ');
-   } else {
-      return str.toLowerCase().replace(str[0], str[0].toUpperCase);
-   }
-}
 
 window.addEventListener("load", function () {
 
