@@ -5,119 +5,75 @@ window.addEventListener("load", function () {
 
    fetch("https://handlers.education.launchcode.org/static/planets.json").then(function (response) {
       response.json().then(function (json) {
-         // console.log(json);
          const div = document.getElementById("missionTarget");
-         let p = randomize(json.length, 0);
+         const missionDestination = Math.round(math.random() * 5);
          console.log(`Selected planet at index ${p}.`);
-         div.innerHTML += `
+         div.innerHTML = `
                 <h2>Mission Destination</h2>
                     <ol>
-                        <li>Name: ${json[p].name}</li>
-                        <li>Diameter: ${json[p].diameter}</li>
-                        <li>Star: ${json[p].star}</li>
-                        <li>Distance from Earth: ${json[p].distance}</li>
-                        <li>Number of Moons: ${json[p].moons}</li>
+                        <li>Name: ${json[missionDestination].name}</li>
+                        <li>Diameter: ${json[missionDestination].diameter}</li>
+                        <li>Star: ${json[missionDestination].star}</li>
+                        <li>Distance from Earth: ${json[missionDestination].distance}</li>
+                        <li>Number of Moons: ${json[missionDestination].moons}</li>
                     </ol>
-                <img src="${json[p].image}"><br><br>
+                <img src="${json[missionDestination].image}">
             `;
       });
    });
 
 
-   let form = document.getElementById("formTag");
+   let form = document.querySelector("form");
 
    form.addEventListener("submit", function (event) {
+      let pilotInput = document.querySelector("input[name=pilotName]");
+      let copilotInput = document.querySelector("input[name=copilotName]");
+      let fuelLevelInput = document.querySelector("input[name=fuelLevel]");
+      let cargoMassInput = document.querySelector("input[name=cargoMass]");
 
-      console.log("Form event handler initiated upon attempt to submit.");
+      console.log("pilotInput.value.");
 
-      let status = document.getElementById("launchStatus");
-      let faulty = document.getElementById("faultyItems");
-      status.innerHTML = "Awaiting Information Before Launch";
-      status.style.color = "black";
-      faulty.style.visibility = "hidden";
-      console.log(`Launch Status is ${faulty.style.visibility}.`);
+      if ((pilotInput.value === "") || (copilotInput.value === "") || (fuelLevelInput.value === "") || (cargoMassInput.value === "")
+      alert("please fill all information in the Box");
+      event.preventDefault();
+   } else if (isNaN(pilotInput.value) === false || isNaN(copilotInput.value) === false) {
+      alert("Please input valid Name for pilot Name or Co-pilot Name(or both");
 
-
-      let pilot = document.querySelector("input[name = pilotName]");
-      let copilot = document.querySelector("input[name = copilotName]");
-      let fuel = document.querySelector("input[name = fuelLevel]");
-      let cargo = document.querySelector("input[name = cargoWeight]");
-
-      console.log(`Pilot: ${pilot.value}  Co-pilot: ${copilot.value}`);
-      console.log(`Fuel: ${fuel.value}  Cargo: ${cargo.value}`);
-
-      let fieldsNotEmpty, namesAlpha, amountsNumbers = false;
-
-      if (pilot.value === "" || copilot.value === "" || fuel.value === "" || cargo.value === "") {
-         console.log("User did not fill all fields.");
-         alert("All fields required.");
-         event.preventDefault();
+   } else if (isNaN(fuelLevelInput.value) === true || isNaN(cargoMassInput.value) === true) {
+      alert(" Please check that you have entered valid numbers for both fuel level and cargo Mass.");
+      event.preventDefault();
+   } else {
+      document.getElementById("pilotStatus").innerHTML = "pilot" + pilotInput.value + "Ready";
+      document.getElementById("copilotStatus").innerHTML = "Co-pilot" + copilotInput.value + "Ready";
+      if (fuelLevelInput.value < 10000) {
+         document.getElementById("faultyItems").style.visibility = "visible";
+         document.getElementById("launchStatus").innerHTML = "Shuttle Not Ready for Launch";
+         document.getElementById("launchStatus").style.color = "red";
+         document.getElementById("fuelStatus").innerHTML = "Fuel Level too low for Launch";
       } else {
-         fieldsNotEmpty = true;
+         document.getElementById("fuelStatus").innerHTML = "Fuel Level high enough for Launch";
+
       }
-
-      let alphaRegEx = /^[a-zA-Z +]+$/;
-      if (!pilot.value.match(alphaRegEx) || !copilot.value.match(alphaRegEx)) {
-         console.log("User tried to enter non-alphabetic name(s).");
-         alert("Oops! Please check that you have entered valid names for both pilot and copilot.");
-         event.preventDefault();
-      } else {
-         namesAlpha = true;
-      }
-
-      if (isNaN(Number(fuel.value)) || isNaN(Number(cargo.value))) {
-         console.log("User did not use valid number(s).");
-         alert("Oops! Please check that you have entered valid numbers for both fuel level and cargo weight.");
-         event.preventDefault();
-      } else {
-         amountsNumbers = true;
-      }
-
-      if (fieldsNotEmpty && namesAlpha && amountsNumbers) {
-
-         pilot.value = toTitleCase(pilot.value);
-         copilot.value = toTitleCase(copilot.value);
-         console.log(`${pilot.value} and ${copilot.value} are requesting to launch with ${fuel.value} gallons of fuel and ${cargo.value} pounds of cargo.`);
-
-         let pilotStatus = document.getElementById("pilotStatus");
-         let copilotStatus = document.getElementById("copilotStatus");
-         let fuelStatus = document.getElementById("fuelStatus");
-         let cargoStatus = document.getElementById("cargoStatus");
-
-         pilotStatus.innerHTML = `Pilot, ${pilot.value}, ready`;
-         copilotStatus.innerHTML = `Co-pilot, ${copilot.value}, ready`;
-
-         if (fuel.value < 10000) {
-            fuelStatus.innerHTML = "Not enough fuel to launch";
-            status.style.color = "red";
-            status.innerHTML = "Shuttle not ready for launch";
-            console.log("Fuel status changed: not enough fuel to launch");
-         }
-
-         if (cargo.value > 10000) {
-            cargoStatus.innerHTML = "Cargo is too heavy to launch";
-            status.style.color = "red";
-            status.innerHTML = "Shuttle not ready for launch";
-            console.log("Cargo status changed: cargo is too heavy.");
-         }
-
-         if (fuel.value >= 10000 && cargo.value <= 10000) {
-            status.style.color = "green";
-            status.innerHTML = "Shuttle is ready for launch";
-            fuelStatus.innerHTML = "Fuel level high enough for launch";
-            cargoStatus.innerHTML = "Cargo weight low enough for launch";
-            console.log("Go for launch!")
-         }
-
-         faulty.style.visibility = "visible";
-         console.log(`Launch Status is ${faulty.style.visibility}.`);
-
-         event.preventDefault();
+      if (cargoMassInput.value >= 10000) {
+         document.getElementById("faultyItems").style.visibility = "visible";
+         document.getElementById("launchStatus").innerHTML = "Shuttle Not Ready for Launch";
+         document.getElementById("launchStatus").style.color = "red";
+         document.getElementById("fuelStatus").innerHTML = "Cargo Mass too high for Launch";
 
       } else {
-         console.log("Waiting for user to resubmit with valid data.");
+         document.getElementById("cargoStatus").innerHTML = "Cargo Mass low enough for Launch";
+      }
+      if (cargoMassInput.value <= 10000 && fuelLevelInput.value >= 10000) {
+         document.getElementById("launchStatus").innerHTML = "Shuttle ready for Launch";
+         document.getElementById("launchStatus").style.color = "green";
+         document.getElementById("launchStatus").innerHTML = "Cargo Mass low enough for Launch";
+         document.getElementById("faultyItems").style.visibility = "hidden";
+
       }
 
-   });
+      event.preventDefault();
 
+   }
+});
+      
 });
