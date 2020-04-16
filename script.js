@@ -35,9 +35,9 @@ window.addEventListener("load", function () {
          alert("Please use NUMBERS only");
          event.preventDefault();
       } else {
-         document.getElementById("pilotStatus").innerHTML = "Pilot " + pilotInput.value + " Ready";
-         document.getElementById("copilotStatus").innerHTML = "Co-pilot " + copilotInput.value + " Ready";
-         if (fuelLevelInput.value <= 10000) {
+         document.getElementById("pilotStatus").innerHTML = "Pilot " + pilotInput.value + " Is Ready for Launch";
+         document.getElementById("copilotStatus").innerHTML = "Co-pilot " + copilotInput.value + " Is Ready for Launch";
+         if (fuelLevelInput.value <= 9000) {
             document.getElementById("faultyItems").style.visibility = "visible";
             document.getElementById("launchStatus").innerHTML = "Shuttle Not Ready for Launch";
             document.getElementById("launchStatus").style.color = "red";
@@ -55,9 +55,9 @@ window.addEventListener("load", function () {
          }
          if (cargoMassInput.value <= 10000 && fuelLevelInput.value >= 10000) {
             document.getElementById("launchStatus").innerHTML = "Shuttle Ready for Launch";
-            document.getElementById("launchStatus").style.color = "Blue";
+            document.getElementById("launchStatus").style.color = "Blue";// i know the color is Green.
             document.getElementById("cargoStatus").innerHTML = "Cargo mass low enough for launch";
-            document.getElementById("faultyItems").style.visibility = "hidden";
+            document.getElementById("faultyItems").style.visibility = "Visible";
 
 
          }
